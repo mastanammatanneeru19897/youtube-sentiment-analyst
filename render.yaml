@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: youtube-sentiment-analyst
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port 10000
