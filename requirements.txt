@@ -1,4 +1,4 @@
 streamlit
 pandas
-youtube-comment-downloader==0.1.78
 textblob
+yt-dlp
