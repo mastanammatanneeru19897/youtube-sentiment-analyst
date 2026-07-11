@@ -1,11 +1,26 @@
 import streamlit as st
 import pandas as pd
+import re
 from youtube_comment_downloader import YoutubeCommentDownloader, SORT_BY_POPULAR
 from textblob import TextBlob
 
+def extract_video_id(url):
+    """
+    యూట్యూబ్ లింక్ ఏ ఫార్మాట్‌లో ఉన్నా (Shorts, Mobile, Web, Playlist) 
+    దాని నుండి కేవలం 11 అక్షరాల వీడియో ID ని మాత్రమే వేరు చేస్తుంది.
+    """
+    pattern = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
+    match = re.search(pattern, url)
+    return match.group(1) if match else None
+
 def get_video_comments_free(video_url):
+    video_id = extract_video_id(video_url)
+    if not video_id:
+        raise Exception("Invalid YouTube URL. Please check the link.")
+        
     downloader = YoutubeCommentDownloader()
-    generator = downloader.get_comments_from_url(video_url, sort_by=SORT_BY_POPULAR)
+    # ఇక్కడ url కి బదులు కేవలం video_id ని పంపుతున్నాం
+    generator = downloader.get_comments(video_id, sort_by=SORT_BY_POPULAR)
     comments = []
     count = 0
     for comment in generator:
@@ -130,7 +145,7 @@ if st.button("Analyze Sentiment"):
                 st.markdown(f"""
                     <div class="metric-container">
                         <div class="card">
-                            <div class="card-title">Analyzed</div>
+                            <div class="card-title">My apps</div>
                             <div class="card-value val-total">{len(raw_comments)}</div>
                         </div>
                         <div class="card">
