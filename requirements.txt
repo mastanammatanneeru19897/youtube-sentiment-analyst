@@ -2,3 +2,4 @@ streamlit>=1.20.0
 pandas
 google-generativeai
 youtube-transcript-api
+textblob
